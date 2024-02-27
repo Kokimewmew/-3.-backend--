@@ -1,14 +1,17 @@
 import json
+import os
 from datetime import datetime
 
 
 def get_data_from_json():
-    with open("C:/Users/Артур/PycharmProjects/Курсовая 3. Основы backend-разработки/utils/operations.json", "r", encoding="utf8") as f:
+    """Открывает и читает файл json """
+    with open(os.path.join("..", "operations.json"), "r", encoding="utf8") as f:
         operations = json.load(f)
     return operations
 
 
 def sort_data_executed(operations):
+    """Возвращает 5 выполненных операции отсортированных датой с конца"""
     executed_operations_ = []
 
     for operation in operations:
@@ -19,6 +22,7 @@ def sort_data_executed(operations):
 
 
 def reformat_date(five_last_operations):
+    """Реформатирование даты в виде дд.мм.гггг"""
     reformat_date = five_last_operations
     for item in reformat_date:
         item["date"] = datetime.strptime(item["date"], "%Y-%m-%dT%H:%M:%S.%f").strftime("%d.%m.%Y")
@@ -26,6 +30,7 @@ def reformat_date(five_last_operations):
 
 
 def reformat_card(item):
+    """Реформатирование номеров карт и счетов, скрыв часть цифр символом *"""
     bank_digits = item.split()[-1]
     bank_name = item.split()[:-1]
     bank_name = " ".join(bank_name)
@@ -37,10 +42,3 @@ def reformat_card(item):
     masked_cred = "".join(bank_name + " " + bank_digits)
 
     return masked_cred
-
-
-operations = get_data_from_json()
-five_last_operations = sort_data_executed(operations)
-reformat_date_operations = reformat_date(five_last_operations)
-
-
